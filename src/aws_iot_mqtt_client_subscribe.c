@@ -41,6 +41,10 @@ extern "C" {
 
 #include "aws_iot_mqtt_client_common_internal.h"
 
+#include "esp_log.h"
+static const char *TAG = "aws_iot_client_subscribe";
+
+
 /**
   * Serializes the supplied subscribe data into the supplied buffer, ready for sending
   * @param pTxBuf the buffer into which the packet will be serialized
@@ -258,8 +262,10 @@ static IoT_Error_t _aws_iot_mqtt_internal_subscribe(AWS_IoT_Client *pClient, con
 
 	pClient->clientData.messageHandlers[indexOfFreeMessageHandler].topicName =
 			pTopicName;
+	//ESP_LOGE(TAG, "pTopicName: %s", pTopicName);
 	pClient->clientData.messageHandlers[indexOfFreeMessageHandler].topicNameLen =
 			topicNameLen;
+	//ESP_LOGE(TAG, "topicNameLen: %u", topicNameLen);
 	pClient->clientData.messageHandlers[indexOfFreeMessageHandler].pApplicationHandler =
 			pApplicationHandler;
 	pClient->clientData.messageHandlers[indexOfFreeMessageHandler].pApplicationHandlerData =
@@ -310,8 +316,12 @@ IoT_Error_t aws_iot_mqtt_subscribe(AWS_IoT_Client *pClient, const char *pTopicNa
 		FUNC_EXIT_RC(rc);
 	}
 
+	//ESP_LOGE(TAG, "aws_iot_mqtt_subscribe");
+	//ESP_LOGE(TAG, "pTopicName1: %s", pTopicName);
 	subRc = _aws_iot_mqtt_internal_subscribe(pClient, pTopicName, topicNameLen, qos,
 											 pApplicationHandler, pApplicationHandlerData);
+
+	//ESP_LOGE(TAG, "pTopicName2: %s", pTopicName);
 
 	rc = aws_iot_mqtt_set_client_state(pClient, CLIENT_STATE_CONNECTED_SUBSCRIBE_IN_PROGRESS, clientState);
 	if(SUCCESS == subRc && SUCCESS != rc) {
@@ -434,4 +444,3 @@ IoT_Error_t aws_iot_mqtt_resubscribe(AWS_IoT_Client *pClient) {
 #ifdef __cplusplus
 }
 #endif
-

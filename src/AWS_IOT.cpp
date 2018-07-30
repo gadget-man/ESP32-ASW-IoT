@@ -81,12 +81,15 @@ void iot_subscribe_callback_handler(AWS_IoT_Client *pClient, char *topicName, ui
         IoT_Publish_Message_Params *params, void *pData)
 {
     if(subApplCallBackHandler != 0) //User call back if configured
-    ESP_LOGE(TAG, "iot_subscribe_callback_handler");
+    /*ESP_LOGE(TAG, "iot_subscribe_callback_handler");
     ESP_LOGE(TAG,"topicName: %s",topicName);
+    ESP_LOGE(TAG,"topicNameLen: %u", topicNameLen);
     ESP_LOGE(TAG, "payloadLen: %u", params->payloadLen);
     ESP_LOGE(TAG, "payload: %s",(char *)params->payload);
+    */
 
-    subApplCallBackHandler(topicName,params->payloadLen,(char *)params->payload);
+    //subApplCallBackHandler(topicName,params->payloadLen,(char *)params->payload);
+    subApplCallBackHandler(topicName,topicNameLen,params->payloadLen,(char *)params->payload);
 }
 
 

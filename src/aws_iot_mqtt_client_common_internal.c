@@ -47,6 +47,10 @@ extern "C" {
 /* Max length of packet header */
 #define MAX_NO_OF_REMAINING_LENGTH_BYTES 4
 
+#include "esp_log.h"
+static const char *TAG = "aws_iot_mqtt_client_common_internal";
+
+
 /**
  * Encodes the message length according to the MQTT algorithm
  * @param buf the buffer into which the encoded data is written
@@ -505,15 +509,21 @@ static IoT_Error_t _aws_iot_mqtt_internal_handle_publish(AWS_IoT_Client *pClient
 
 	FUNC_ENTRY;
 
-	topicName = NULL;
+
+	topicName = 0;
 	topicNameLen = 0;
 	len = 0;
 
+	//ESP_LOGE(TAG, "deserialize");
+	//ESP_LOGE(TAG, "topicName1: %s", *topicName);
 	rc = aws_iot_mqtt_internal_deserialize_publish(&msg.isDup, &msg.qos, &msg.isRetained,
 												   &msg.id, &topicName, &topicNameLen,
 												   (unsigned char **) &msg.payload, &msg.payloadLen,
 												   pClient->clientData.readBuf,
 												   pClient->clientData.readBufSize);
+ 	//ESP_LOGE(TAG, "topicName1: %s", topicName);
+	//ESP_LOGE(TAG, "topicNameLen: %u", topicNameLen);
+
 
 	if(SUCCESS != rc) {
 		FUNC_EXIT_RC(rc);
